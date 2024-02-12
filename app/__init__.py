@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
-from .db import db
-from .models import Book
+from .models import Book, db
 
 def create_app(database_uri="sqlite:///db.sqlite3"):
     # Init App
@@ -87,7 +86,7 @@ def create_app(database_uri="sqlite:///db.sqlite3"):
         db.session.delete(book)
         db.session.commit()
 
-        return book_schema.jsonify(book)
+        return jsonify({'message': 'Book deleted'})
 
     return app
 

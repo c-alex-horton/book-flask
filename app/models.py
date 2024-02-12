@@ -1,4 +1,6 @@
-from .db import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
     # Book Class/Model
 class Book(db.Model):
@@ -8,9 +10,10 @@ class Book(db.Model):
     genre=db.Column(db.String(100))
     pages=db.Column(db.Integer)
     read=db.Column(db.Boolean)
-def __init__(self, name, author, genre, pages, read):
-    self.name = name
-    self.author = author
-    self.genre = genre
-    self.pages = pages
-    self.read = read
+    def __init__(self, name, author, genre, pages, read):
+        self.name = name
+        self.author = author
+        self.genre = genre
+        self.pages = pages
+        self.read = read
+        
