@@ -17,6 +17,13 @@ pipeline {
         sh 'docker exec $(docker ps -q) python -m pytest'
       }
     }
+    stage('cleanup') {
+      steps {
+        sh 'docker stop $(docker ps -q)'
+        sh 'docker rm $(docker ps -a -q)'
+        sh 'docker rmi $(docker images -q)'
+      }
+    }
 
   }
 }
