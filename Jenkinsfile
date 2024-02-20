@@ -12,6 +12,11 @@ pipeline {
         sh 'docker run -d -p 5000:5000 book-flask'
       }
     }
+    stage('test') {
+      steps {
+        sh 'docker exec $(docker ps -q) python -m pytest'
+      }
+    }
 
   }
 }
