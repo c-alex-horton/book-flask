@@ -67,3 +67,10 @@ def test_delete_book(client):
     response = client.get('/book/1')
     assert response.status_code == 404
     assert response.json == {'message': 'Book not found'}
+
+# A test that will fail
+def test_get_book_not_found(client):
+    response = client.get('/book/1')
+
+    assert response.status_code == 301
+    assert response.json == {'message': 'this should fail'}
