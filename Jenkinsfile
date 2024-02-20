@@ -14,7 +14,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'docker exec -it $(docker ps -q) python -m pytest --junitxml=test-results.xml | tee pytest-output.txt'
+        sh 'docker exec -it $(docker ps -q) python -m pytest /tests --junitxml=test-results.xml | tee pytest-output.txt'
       }
     }
   }
