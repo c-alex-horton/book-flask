@@ -14,14 +14,12 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'docker exec $(docker ps -q) python -m pytest /tests --junitxml=test-results.xml | tee pytest-output.txt'
+        sh 'docker exec $(docker ps -q) python -m pytest /tests | tee pytest-output.txt'
       }
     }
   }
   post {
     always {
-      junit 'test-results.xml'
-      archiveArtifacts artifacts: 'pytest-output.txt' 
       sh 'docker stop $(docker ps -q)'
       sh 'docker rm $(docker ps -a -q)'
       sh 'docker rmi $(docker images -q)'
