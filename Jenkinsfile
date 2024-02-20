@@ -14,7 +14,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'docker exec $(docker ps -q) python -m pytest'
+        sh 'docker exec $(docker ps -q) -it python -m pytest'
       }
     }
     stage('cleanup') {
