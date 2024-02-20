@@ -14,7 +14,24 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'docker exec $(docker ps -q) python -m pytest /tests | tee pytest-output.txt'
+        script {
+          // Run JUnit tests
+          sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests'
+          
+          // Parse JUnit test results
+          def junitResults = junit allowEmptyResults: true, testResults: 'junit-results.xml'
+
+          // Archive JUnit test results
+          archiveJunit 'junit-results.xml'
+          
+          // Check if any tests failed
+          def testFailures = junitResults.failCount + junitResults.errorCount
+          
+          if (testFailures > 0) {
+            currentBuild.result = 'FAILURE'
+            error "JUnit tests failed: ${testFailures} test(s) failed"
+          }
+        }
       }
     }
   }
