@@ -18,6 +18,9 @@ pipeline {
           // Run JUnit tests
           sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests'
           
+          // Copy the JUnit XML file from the container to the Jenkins workspace
+          sh 'docker cp $(docker ps -q):junit-results.xml .'
+
           // Parse JUnit test results
           def junitResults = junit allowEmptyResults: true, testResults: 'junit-results.xml'
 
