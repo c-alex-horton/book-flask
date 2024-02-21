@@ -1,3 +1,4 @@
+/* groovylint-disable Indentation */
 pipeline {
   agent any
   stages {
@@ -41,6 +42,7 @@ pipeline {
       sh 'docker stop $(docker ps -q)'
       sh 'docker rm $(docker ps -a -q)'
       sh 'docker rmi $(docker images -q)'
+      cleanWs() // Clean up the workspace
     }
   }
 }
