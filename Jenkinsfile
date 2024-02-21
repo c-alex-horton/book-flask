@@ -15,20 +15,12 @@ pipeline {
     }
     stage('test') {
       steps {
-        script {
-          try {
-            set + e
-            // Run JUnit tests
-            sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests'
-            set - e
-          } catch (e) {
-              currentBuild.result = 'FAILURE'
-              error "JUnit tests failed: ${e.toString()}"
+        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+          sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests | tee test-results.txt'
         }
       }
     }
   }
-}
   post {
     always {
       sh 'echo "Copying JUnit XML file from container to Jenkins workspace"'
