@@ -15,20 +15,16 @@ pipeline {
     stage('test') {
       steps {
         script {
-          // Run JUnit tests
-          sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests'
-          
-          // See if the JUnit XML file was created
-          sh 'docker exec $(docker ps -q) ls -l junit-results.xml'
+          try {
+            // Run JUnit tests
+            sh 'docker exec $(docker ps -q) python -m pytest --junitxml=junit-results.xml /tests'
+          } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            error "JUnit tests failed: ${e}"
+          }
 
           // Copy the JUnit XML file from the container to the Jenkins workspace
           sh 'docker cp $(docker ps -q):junit-results.xml . || echo "No JUnit XML file found"'
-
-          // See if the JUnit XML file was copied to the Jenkins workspace
-          sh 'ls -l junit-results.xml'
-
-          // Print the contents of the JUnit XML file
-          sh 'cat junit-results.xml'
 
           // Parse JUnit test results
           def junitResults = junit allowEmptyResults: true, testResults: 'junit-results.xml'
